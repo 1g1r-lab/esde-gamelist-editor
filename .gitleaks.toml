@@ -21,7 +21,10 @@ tags = ["path", "personal"]
 [[rules]]
 id = "nas-mount-path"
 description = "NAS / Unix mount path that may reveal host layout"
-regex = '''(?:/volume\d+/|/mnt/[A-Za-z0-9._-]+/|/media/[A-Za-z0-9._-]+/|smb://|nfs://)'''
+# NOTE: "/media/<x>/" is intentionally NOT matched here — this is an ES-DE media
+# editor, so "downloaded_media/<system>/..." style paths are normal, not leaks.
+# /home/<user>/ (user-home-path), UNC and private-IP rules still apply.
+regex = '''(?:/volume\d+/|/mnt/[A-Za-z0-9._-]+/|smb://|nfs://)'''
 tags = ["path", "personal"]
 
 [[rules]]
