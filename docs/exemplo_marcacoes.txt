@@ -1,0 +1,30 @@
+# Arquivo de lote do ES-DE Gamelist Editor  (separador: "|")
+# ----------------------------------------------------------
+# Dois tipos de linha podem ser misturados no mesmo arquivo:
+#
+# 1) REMOÇÃO:   <console>|<path>|<ação>
+#    ação = 1 (só entrada) | 2 (entrada+ROM) | 3 (entrada+ROM+mídia)
+#           (também aceita: entrada, rom, midia)
+#
+# 2) EDIÇÃO DE CAMPO:   <console>|<path>|<campo>|<novo valor>
+#    ex.: trocar o name "D2 [USA]" por "D2"  ->   nes|./D2 (USA).zip|name|D2
+#    o valor pode conter "|"; valor vazio limpa o campo.
+#
+#   console = nome do sistema na gamelist (nes, snes, psx, ...)
+#   path    = valor exato do campo <path> da gamelist (a chave)
+#
+# O "|" não pode aparecer em nome de arquivo no Windows, então nunca colide
+# com o path. Linhas em branco ou começadas por "#" são ignoradas.
+# Também aceita o formato antigo de 2 campos (path|ação), que usa o console aberto.
+#
+# Depois de importar, use "Salvar & Commit": o dry-run agrega todos os consoles
+# e o commit aplica em cada um (com backup antes de escrever).
+
+# --- remoções ---
+nes|./Batman (Japan) (En).zip|3
+snes|./Akumajou Dracula (Japan).zip|2
+
+# --- edições de campo ---
+nes|./D2 (USA).zip|name|D2
+psx|./Final Fantasy VII (USA) (Disc 1).bin|genre|RPG
+snes|./Chrono Trigger (USA).zip|developer|Square

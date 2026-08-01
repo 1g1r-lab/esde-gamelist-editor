@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ES-DE Gamelist Editor</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-screen="open">
+
+<!-- ============================== TOPBAR ============================== -->
+<header class="topbar">
+  <div class="brand">
+    <svg class="brand-logo" width="34" height="34" viewBox="0 0 48 48" fill="none"
+         xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <rect x="3" y="3" width="42" height="42" rx="11" fill="var(--logo-bg)" stroke="var(--logo-stroke)" stroke-width="2"/>
+      <!-- linhas da "gamelist" -->
+      <rect x="12" y="14" width="16" height="3.4" rx="1.7" fill="var(--logo-line)"/>
+      <rect x="12" y="22" width="22" height="3.4" rx="1.7" fill="var(--logo-accent)"/>
+      <rect x="12" y="30" width="13" height="3.4" rx="1.7" fill="var(--logo-line)"/>
+      <!-- pontos/marcadores das entradas -->
+      <circle cx="8.6" cy="15.7" r="1.7" fill="var(--logo-line)"/>
+      <circle cx="8.6" cy="23.7" r="1.7" fill="var(--logo-accent)"/>
+      <circle cx="8.6" cy="31.7" r="1.7" fill="var(--logo-line)"/>
+      <!-- lápis (editor) -->
+      <g transform="rotate(45 37 31)">
+        <rect x="34.4" y="20" width="5.2" height="15" rx="1.4" fill="var(--logo-accent)"/>
+        <path d="M34.4 35 L37 39.5 L39.6 35 Z" fill="var(--logo-line)"/>
+        <rect x="34.4" y="20" width="5.2" height="3.2" rx="1.4" fill="var(--logo-stroke)"/>
+      </g>
+    </svg>
+    <div class="brand-text">
+      <span class="brand-title">GAMELIST</span>
+      <span class="brand-sub">ES-DE EDITOR <b class="brand-ver">v1.3</b></span>
+    </div>
+  </div>
+
+  <div class="topbar-center">
+    <select id="systemSelect" class="system-select" title="Sistema (gamelist)"></select>
+    <div class="search-wrap">
+      <span class="search-icon">⌕</span>
+      <input id="searchInput" type="text" placeholder="Filtrar  ( / )" autocomplete="off">
+      <span id="searchCount" class="search-count"></span>
+    </div>
+  </div>
+
+  <div class="topbar-right">
+    <button id="themeBtn" class="btn ghost" title="Alternar tema claro/escuro">☾</button>
+    <button id="helpBtn" class="btn ghost" title="Atalhos ( ? )">?</button>
+    <button id="openBtn" class="btn ghost" title="Abrir gamelist">Abrir</button>
+    <button id="importBtn" class="btn ghost" title="Importar marcações em lote (.txt)">Importar</button>
+    <button id="orphanBtn" class="btn ghost" title="ES-DE Orphan Cleaner — limpar entradas e mídia órfãs">Limpeza</button>
+    <div class="pending-pill" id="pendingPill" title="Alterações pendentes">
+      <span class="dot edit"></span><span id="pCntEdit">0</span>
+      <span class="dot r1"></span><span id="pCntR1">0</span>
+      <span class="dot r2"></span><span id="pCntR2">0</span>
+      <span class="dot r3"></span><span id="pCntR3">0</span>
+    </div>
+    <button id="commitBtn" class="btn primary" title="Salvar / Commit ( Ctrl+S )">
+      Salvar &amp; Commit
+    </button>
+  </div>
+</header>
+
+<!-- ============================== MAIN ============================== -->
+<main class="layout" id="editorLayout">
+  <!-- LISTA -->
+  <section class="list-pane">
+    <div class="list-head">
+      <span id="listSystemName" class="list-system">—</span>
+      <div class="list-head-right">
+        <select id="filterMode" class="sort-select" title="Filtro da lista">
+          <option value="all">Todos</option>
+          <option value="marked">Somente marcados</option>
+        </select>
+        <select id="sortSelect" class="sort-select" title="Ordenar lista">
+          <option value="name:asc">Nome A–Z</option>
+          <option value="name:desc">Nome Z–A</option>
+          <option value="date:asc">Data ↑ (mais antigo)</option>
+          <option value="date:desc">Data ↓ (mais novo)</option>
+          <option value="path:asc">Arquivo A–Z</option>
+        </select>
+        <span id="listMeta" class="list-meta"></span>
+      </div>
+    </div>
+    <div id="listScroll" class="list-scroll">
+      <div id="listSpacerTop"></div>
+      <div id="listRows"></div>
+      <div id="listSpacerBottom"></div>
+    </div>
+  </section>
+
+  <!-- DETALHE -->
+  <section class="detail-pane" id="detailPane">
+    <div class="detail-empty" id="detailEmpty">
+      <div class="detail-empty-art"></div>
+      <p>Selecione um jogo na lista</p>
+      <p class="muted small">↑ ↓ ou J / K para navegar</p>
+    </div>
+
+    <div class="detail-body" id="detailBody" hidden>
+      <div class="media-strip" id="mediaStrip"></div>
+
+      <div class="detail-header">
+        <h2 id="detailName" class="detail-name">—</h2>
+        <div class="detail-mark" id="detailMark"></div>
+      </div>
+      <code class="detail-path" id="detailPath"></code>
+
+      <div class="mark-toolbar">
+        <span class="mark-label">Marcar p/ remoção:</span>
+        <button class="markbtn r1" data-level="1" title="Del — só a entrada">1 · Entrada</button>
+        <button class="markbtn r2" data-level="2" title="Shift+Del — entrada + ROM">2 · + ROM</button>
+        <button class="markbtn r3" data-level="3" title="Alt+Del — entrada + ROM + mídia">3 · + Mídia</button>
+        <button class="markbtn clear" data-level="0" title="U — desmarcar">Limpar</button>
+      </div>
+
+      <div class="fields" id="fieldsWrap"></div>
+
+      <div class="field-add">
+        <input id="newFieldName" class="field-add-name" placeholder="novo campo (ex.: region)">
+        <button id="addFieldBtn" class="btn ghost small">+ Adicionar campo</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ============================== OPEN MODAL ============================== -->
+<div class="modal-backdrop" id="openModal" hidden>
+  <div class="modal">
+    <div class="modal-head"><h3>Abrir gamelist</h3></div>
+    <div class="modal-body">
+      <div class="tabs">
+        <button class="tab active" data-tab="root">Pasta de sistemas (ES-DE)</button>
+        <button class="tab" data-tab="file">Arquivo único</button>
+      </div>
+
+      <div class="tabpanel" data-panel="root">
+        <label>Pasta de gamelists <small>(contém <code>&lt;sistema&gt;/gamelist.xml</code>)</small></label>
+        <div class="path-row">
+          <input id="in_gamelists_root" placeholder="ex.: .../ES-DE/gamelists">
+          <button type="button" class="btn small pick" data-pick="folder" data-target="in_gamelists_root">Procurar…</button>
+        </div>
+      </div>
+
+      <div class="tabpanel" data-panel="file" hidden>
+        <label>Arquivo gamelist.xml</label>
+        <div class="path-row">
+          <input id="in_gamelist_file" placeholder="ex.: .../ES-DE/gamelists/snes/gamelist.xml">
+          <button type="button" class="btn small pick" data-pick="file" data-target="in_gamelist_file">Procurar…</button>
+        </div>
+        <label>Nome do sistema <small>(opcional — inferido da pasta)</small></label>
+        <input id="in_system" placeholder="snes">
+      </div>
+
+      <hr>
+      <label>Pasta de ROMs <small>(contém <code>&lt;sistema&gt;/...</code> — necessária p/ remoção nível 2)</small></label>
+      <div class="path-row">
+        <input id="in_roms_root" placeholder="ex.: .../ROMs">
+        <button type="button" class="btn small pick" data-pick="folder" data-target="in_roms_root">Procurar…</button>
+      </div>
+
+      <label>Pasta downloaded_media <small>(necessária p/ remoção nível 3 e prévia de capas)</small></label>
+      <div class="path-row">
+        <input id="in_media_root" placeholder="ex.: .../ES-DE/downloaded_media">
+        <button type="button" class="btn small pick" data-pick="folder" data-target="in_media_root">Procurar…</button>
+      </div>
+
+      <label>Pasta de backup <small>(cópia da gamelist antes de cada commit, por console)</small></label>
+      <div class="path-row">
+        <input id="in_backup_root" placeholder="ex.: .../ES-DE/backup">
+        <button type="button" class="btn small pick" data-pick="folder" data-target="in_backup_root">Procurar…</button>
+      </div>
+
+      <label>Lixeira <small>(opcional — padrão: <code>_GAMELIST_EDITOR_TRASH</code>)</small></label>
+      <div class="path-row">
+        <input id="in_trash_root" placeholder="(padrão)">
+        <button type="button" class="btn small pick" data-pick="folder" data-target="in_trash_root">Procurar…</button>
+      </div>
+
+      <label class="checkbox-row">
+        <input type="checkbox" id="in_hard_delete">
+        <span>Apagar de vez (hard delete) — <strong>sem lixeira</strong></span>
+      </label>
+
+      <div id="openError" class="error-box" hidden></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn ghost" id="openCancel">Cancelar</button>
+      <button class="btn primary" id="openConfirm">Abrir</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== COMMIT MODAL ============================== -->
+<div class="modal-backdrop" id="commitModal" hidden>
+  <div class="modal wide">
+    <div class="modal-head">
+      <h3>Pré-visualização (dry-run)</h3>
+      <span id="commitMode" class="commit-mode"></span>
+    </div>
+    <div class="modal-body">
+      <div class="plan-summary" id="planSummary"></div>
+      <div class="plan-list" id="planList"></div>
+      <div id="commitResult" class="result-box" hidden></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn ghost" id="commitCancel">Fechar</button>
+      <button class="btn danger" id="commitExecute">Executar commit</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== HELP MODAL ============================== -->
+<!-- ============================== ORPHAN CLEANER ============================== -->
+<div class="modal-backdrop" id="orphanModal" hidden>
+  <div class="modal wide">
+    <div class="modal-head">
+      <h3>ES-DE Orphan Cleaner</h3>
+      <span class="commit-mode" id="orphanMode">→ lixeira</span>
+    </div>
+    <div class="modal-body">
+      <div class="orphan-controls">
+        <label>Escopo</label>
+        <select id="orphanScope" class="sort-select">
+          <option value="current">Console atual</option>
+          <option value="all">Todos os consoles</option>
+        </select>
+        <button class="btn primary" id="orphanScanBtn">Escanear</button>
+        <span class="orphan-hint">Entradas sem ROM na pasta de ROMs e mídia sem jogo correspondente (considera .m3u).</span>
+      </div>
+
+      <div id="orphanResults" hidden>
+        <div class="plan-summary" id="orphanSummary"></div>
+
+        <div class="orphan-sec">
+          <div class="orphan-sec-head">
+            <label class="checkbox-row"><input type="checkbox" id="orphChkAllEntries" checked>
+              <strong>Entradas órfãs da gamelist</strong></label>
+            <span class="list-meta" id="orphMetaEntries"></span>
+          </div>
+          <div class="orphan-list" id="orphListEntries"></div>
+        </div>
+
+        <div class="orphan-sec">
+          <div class="orphan-sec-head">
+            <label class="checkbox-row"><input type="checkbox" id="orphChkAllMedia" checked>
+              <strong>Arquivos de mídia órfãos</strong></label>
+            <span class="list-meta" id="orphMetaMedia"></span>
+          </div>
+          <div class="orphan-list" id="orphListMedia"></div>
+        </div>
+
+        <div class="orphan-sec" id="orphSecM3u" hidden>
+          <div class="orphan-sec-head">
+            <strong>⚠ M3U com discos ausentes</strong>
+            <span class="list-meta">informativo — não é removido por esta limpeza</span>
+          </div>
+          <div class="orphan-list" id="orphListM3u"></div>
+        </div>
+
+        <div id="orphanResult" class="result-box" hidden></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn ghost" id="orphanClose">Fechar</button>
+      <button class="btn danger" id="orphanCleanBtn" disabled>Limpar selecionados</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="helpModal" hidden>
+  <div class="modal">
+    <div class="modal-head"><h3>Atalhos de teclado</h3></div>
+    <div class="modal-body">
+      <div class="kbd-grid" id="kbdGrid"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn primary" id="helpClose">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== CONFIRM MODAL ============================== -->
+<div class="modal-backdrop" id="confirmModal" hidden>
+  <div class="modal">
+    <div class="modal-head"><h3 id="confirmTitle">Confirmar</h3></div>
+    <div class="modal-body">
+      <p id="confirmMsg" class="confirm-msg"></p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn ghost" id="confirmNo">Cancelar</button>
+      <button class="btn primary" id="confirmYes">Continuar</button>
+    </div>
+  </div>
+</div>
+
+<!-- barra de progresso no topo da janela -->
+<div id="topProgress" class="top-progress" hidden><div class="bar"></div></div>
+
+<!-- overlay de carregamento -->
+<div id="loadOverlay" class="load-overlay" hidden>
+  <div class="load-card">
+    <div class="load-spinner"></div>
+    <div id="loadText" class="load-text">Carregando…</div>
+    <div class="load-track"><div class="load-fill"></div></div>
+  </div>
+</div>
+
+<div id="toast" class="toast" hidden></div>
+
+<script src="js/app.js"></script>
+</body>
+</html>

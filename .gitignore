@@ -1,0 +1,39 @@
+# Python
+.venv/
+.venv-build/
+__pycache__/
+*.pyc
+*.pyo
+
+# PyInstaller
+build/
+dist/
+*.manifest
+
+# Editor / OS
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# Lixeira e backups gerados pelo próprio editor
+_GAMELIST_EDITOR_TRASH/
+*.bak-pre-edit-*
+
+# Node (apenas testes de UI)
+node_modules/
+package-lock.json
+.esde_gamelist_editor.json
+
+# Safety net: this is an editor, never a ROM/media host
+*.zip
+*.7z
+*.chd
+*.iso
+*.bin
+*.cue
+*.nds
+*.sfc
+*.nes
+*.gba
