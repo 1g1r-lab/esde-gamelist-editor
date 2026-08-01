@@ -1,6 +1,6 @@
 # Dependências de execução do ES-DE Gamelist Editor
 pywebview>=5.0
-lxml>=5.0
+lxml>=6.1.1
 
 # --- Backend de janela no Linux -------------------------------------------
 # No Windows, o pywebview usa o EdgeChromium (WebView2, já presente no
