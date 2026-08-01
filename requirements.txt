@@ -1,5 +1,5 @@
 # Dependências de execução do ES-DE Gamelist Editor
-pywebview>=5.0
+pywebview>=6.2.1
 lxml>=5.0
 
 # --- Backend de janela no Linux -------------------------------------------
