@@ -1,0 +1,6 @@
+# Normalize line endings; keep Windows launchers as CRLF.
+* text=auto eol=lf
+*.bat text eol=crlf
+*.png binary
+*.jpg binary
+*.ico binary

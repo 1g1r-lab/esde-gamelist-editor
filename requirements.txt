@@ -1,0 +1,11 @@
+# Dependências de execução do ES-DE Gamelist Editor
+pywebview>=5.0
+lxml>=5.0
+
+# --- Backend de janela no Linux -------------------------------------------
+# No Windows, o pywebview usa o EdgeChromium (WebView2, já presente no
+# Windows 10/11) — nada a instalar.
+# No Linux é preciso um backend. A opção mais simples (sem sudo) é o Qt:
+#     pip install pyqt6 pyqt6-webengine
+# Alternativa leve via sistema (Debian/Ubuntu):
+#     sudo apt install python3-gi gir1.2-webkit2-4.1
