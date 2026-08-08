@@ -1,0 +1,66 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build (${{ matrix.asset }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            asset: esde-gamelist-editor-linux-x86_64
+            bin: esde-gamelist-editor-v1.3
+            extra: PyQt6 PyQt6-WebEngine
+          - os: macos-latest
+            asset: esde-gamelist-editor-macos-arm64
+            bin: esde-gamelist-editor-v1.3
+            extra: ""
+          - os: windows-latest
+            asset: esde-gamelist-editor-windows-x86_64.exe
+            bin: esde-gamelist-editor-v1.3.exe
+            extra: ""
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install deps + PyInstaller
+        run: python -m pip install -r requirements.txt pyinstaller ${{ matrix.extra }}
+      - name: Build (one-file, windowed)
+        run: pyinstaller --noconfirm esde-gamelist-editor.spec
+      - name: Rename (Unix)
+        if: runner.os != 'Windows'
+        run: mv "dist/${{ matrix.bin }}" "dist/${{ matrix.asset }}"
+      - name: Rename (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: Rename-Item "dist/${{ matrix.bin }}" "${{ matrix.asset }}"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.asset }}
+          path: dist/${{ matrix.asset }}
+
+  release:
+    name: Attach binaries to the release
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: artifacts/**/*
+          generate_release_notes: true
