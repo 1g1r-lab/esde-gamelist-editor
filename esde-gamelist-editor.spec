@@ -11,9 +11,12 @@ Build:
 import sys
 from PyInstaller.utils.hooks import collect_all
 
-datas = [("frontend", "frontend")]
+datas = [("frontend", "frontend"), ("icon.png", ".")]
 binaries = []
 hiddenimports = []
+
+# App/exe icon — .ico applies on Windows; other OSes ignore it (no .icns yet).
+icon_file = "icon.ico" if sys.platform.startswith("win") else None
 
 # Coleta tudo do pywebview (inclui os backends de janela detectados).
 for pkg in ("webview",):
@@ -49,7 +52,7 @@ exe = EXE(
     a.binaries,
     a.zipfiles,
     a.datas,
-    name="esde-gamelist-editor-v1.3.1",
+    name="esde-gamelist-editor-v1.3.2",
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
@@ -58,4 +61,5 @@ exe = EXE(
     console=False,           # app de janela (sem console)
     disable_windowed_traceback=False,
     argv_emulation=False,
+    icon=icon_file,
 )

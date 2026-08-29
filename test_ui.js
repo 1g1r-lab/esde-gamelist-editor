@@ -50,6 +50,7 @@ const dom = new JSDOM(html, { url: "http://localhost/", runScripts: "outside-onl
 const { window } = dom;
 global.window = window; global.document = window.document;
 window.pywebview = { api };
+window.IntersectionObserver = class { constructor(cb) { this.cb = cb; } observe() {} unobserve() {} disconnect() {} };
 window.requestAnimationFrame = (cb) => setTimeout(() => cb(Date.now()), 0);
 window.cancelAnimationFrame = (id) => clearTimeout(id);
 window.eval(appjs);
@@ -155,6 +156,22 @@ const fire = (elm, type, opts) => elm.dispatchEvent(new window.Event(type, Objec
   ok($$("#planSummary .plan-stat").length === 4, "resumo com 4 métricas");
   await T.executeCommit(); await wait(60);
   ok(calls.some((c) => c[0] === "commit"), "commit chamado ao aplicar o plano");
+
+  console.log("\n[12] Modo GRADE (v1.3.2)");
+  T.setView("grid"); await wait(20);
+  ok($("#app").dataset.view === "grid", "app entra em data-view=grid");
+  ok($("#viewGrid").classList.contains("on"), "botão GRADE ativo");
+  ok($("#tileSizeWrap").hidden === false, "slider de tamanho visível");
+  ok($$("#gridWrap .tile").length >= 1, "grade renderiza tiles");
+  T.selectIndex(0); await wait(20);
+  ok($("#app").dataset.detail === "open", "selecionar abre o slide-over");
+  ok($("#gridWrap .tile.selected") !== null, "tile selecionado destacado");
+  T.setTileSize(200);
+  ok($("#gridWrap").style.getPropertyValue("--tile") === "200px", "slider ajusta o tamanho do tile");
+  T.closeSlideOver();
+  ok($("#app").hasAttribute("data-detail") === false, "fechar recolhe o slide-over");
+  T.setView("list"); await wait(20);
+  ok($("#app").dataset.view === "list", "volta para o modo lista");
 
   console.log(`\nRESULTADO: ${pass} passaram, ${fail} falharam`);
   if (fail > 0) process.exit(1);

@@ -17,6 +17,10 @@
   <header class="header">
     <button class="icon-btn" id="panelToggle" title="Recolher/expandir consoles (Ctrl+B)">☰</button>
     <span class="logo">GAMELIST<b>_</b>EDITOR</span>
+    <div class="viewseg">
+      <button id="viewList" class="on" title="Modo lista (G)">☰ LISTA</button>
+      <button id="viewGrid" title="Modo grade (G)">▦ GRADE</button>
+    </div>
     <div class="search">
       <span class="ic">⌕</span>
       <input id="searchInput" type="text" placeholder="Filtrar  ( / )" autocomplete="off">
@@ -51,30 +55,32 @@
     </aside>
 
     <div class="main">
+      <div class="toolbar">
+        <button class="tab-btn active" id="tabAll" data-mode="all">TODOS</button>
+        <button class="tab-btn" id="tabMarked" data-mode="marked">MARCADOS·<span id="tabMarkedCount">0</span></button>
+        <select class="sort" id="sortSelect" title="Ordenar">
+          <option value="name:asc">Nome A–Z</option>
+          <option value="name:desc">Nome Z–A</option>
+          <option value="date:asc">Data ↑</option>
+          <option value="date:desc">Data ↓</option>
+          <option value="path:asc">Arquivo A–Z</option>
+        </select>
+        <label class="tilesize" id="tileSizeWrap" hidden>tamanho <input type="range" id="tileSize" min="120" max="220" value="150"></label>
+        <span class="count" id="listCount"></span>
+      </div>
       <div class="panes">
-        <!-- LIST -->
-        <section class="list-pane">
-          <div class="list-tabs">
-            <button class="tab-btn active" id="tabAll" data-mode="all">TODOS</button>
-            <button class="tab-btn" id="tabMarked" data-mode="marked">MARCADOS·<span id="tabMarkedCount">0</span></button>
-            <select class="sort" id="sortSelect" title="Ordenar">
-              <option value="name:asc">Nome A–Z</option>
-              <option value="name:desc">Nome Z–A</option>
-              <option value="date:asc">Data ↑</option>
-              <option value="date:desc">Data ↓</option>
-              <option value="path:asc">Arquivo A–Z</option>
-            </select>
-            <span class="count" id="listCount"></span>
-          </div>
-          <div class="list-scroll" id="listScroll">
-            <div id="listSpacerTop"></div>
-            <div id="listRows"></div>
-            <div id="listSpacerBottom"></div>
-          </div>
-        </section>
+        <!-- LIST view -->
+        <div class="list-scroll" id="listScroll">
+          <div id="listSpacerTop"></div>
+          <div id="listRows"></div>
+          <div id="listSpacerBottom"></div>
+        </div>
+        <!-- GRID view -->
+        <div class="grid" id="gridWrap"></div>
 
-        <!-- DETAIL -->
-        <section class="detail-pane">
+        <!-- DETAIL (inline in list mode; slide-over in grid mode) -->
+        <section class="detail-pane" id="detailPane">
+          <button class="slide-close" id="slideClose" title="Fechar (Esc)">✕</button>
           <div class="detail-empty" id="detailEmpty">
             <p>Selecione um jogo na lista.</p>
             <p class="muted">↑ ↓ ou J / K para navegar</p>
