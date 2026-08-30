@@ -29,7 +29,7 @@ executable**.
 | **Marking for removal** (`1` / `2` / `3`) with the plan bar | **Slide-over detail** panel in grid mode |
 | [![Marking games for removal](docs/img/editor-marking.png)](docs/img/editor-marking.png) | [![Grid slide-over detail](docs/img/editor-grid-detail.png)](docs/img/editor-grid-detail.png) |
 
-<sub>UI shown in Portuguese (pt-BR) — the app's current language — with placeholder sample data.</sub>
+<sub>English UI (default) with placeholder sample data. A one-click <b>EN / PT</b> toggle in the header switches to Portuguese (pt-BR).</sub>
 
 ---
 
@@ -51,6 +51,8 @@ SmartScreen may warn: click **More info → Run anyway**. Windows uses the built
 
 ## Features
 
+- **Bilingual UI (English / Português)** — a one-click `EN / PT` toggle in the header; the
+  choice is remembered between sessions. English is the default.
 - **Console sidebar** — every system in one panel; click to switch, collapse with `Ctrl+B`
   (it folds into horizontal "pills" on top), jump between consoles with `[` and `]`.
 - **List and Grid views** — toggle `☰ LIST / ▦ GRID` in the header (or press `G`). Grid shows
@@ -242,8 +244,8 @@ run.bat       # Windows      (uses the built-in WebView2)
 **Build a single-file executable** (PyInstaller):
 
 ```bash
-./build.sh    # → dist/esde-gamelist-editor-v1.3.2
-build.bat     # → dist\esde-gamelist-editor-v1.3.2.exe
+./build.sh    # → dist/esde-gamelist-editor-v1.3.3
+build.bat     # → dist\esde-gamelist-editor-v1.3.3.exe
 ```
 
 ## Tests
@@ -272,6 +274,7 @@ esde-gamelist-editor/
     index.html
     css/style.css
     js/app.js        # state, virtual scrolling, grid, keyboard, marking, editing
+    js/i18n.js       # EN/PT dictionary + translation engine (data-i18n hooks)
   icon.ico / icon.png
   esde-gamelist-editor.spec   # PyInstaller config (embeds the icon)
 ```

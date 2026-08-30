@@ -7,6 +7,7 @@ const { JSDOM } = require("jsdom");
 const root = __dirname;
 const html = fs.readFileSync(path.join(root, "frontend/index.html"), "utf8");
 const appjs = fs.readFileSync(path.join(root, "frontend/js/app.js"), "utf8");
+const i18njs = fs.readFileSync(path.join(root, "frontend/js/i18n.js"), "utf8");
 
 const SYS = [{ system: "snes", count: 1 }, { system: "nes", count: 2 }];
 const GL = {
@@ -53,6 +54,7 @@ window.pywebview = { api };
 window.IntersectionObserver = class { constructor(cb) { this.cb = cb; } observe() {} unobserve() {} disconnect() {} };
 window.requestAnimationFrame = (cb) => setTimeout(() => cb(Date.now()), 0);
 window.cancelAnimationFrame = (id) => clearTimeout(id);
+window.eval(i18njs);
 window.eval(appjs);
 const T = window.__t;
 
@@ -172,6 +174,16 @@ const fire = (elm, type, opts) => elm.dispatchEvent(new window.Event(type, Objec
   ok($("#app").hasAttribute("data-detail") === false, "fechar recolhe o slide-over");
   T.setView("list"); await wait(20);
   ok($("#app").dataset.view === "list", "volta para o modo lista");
+
+  console.log("\n[13] i18n EN/PT toggle");
+  ok(window.document.documentElement.lang === "en", "idioma padrão é inglês (en)");
+  ok($("#tabAll").textContent === "ALL", "rótulo estático em inglês por padrão");
+  ok($("#viewList").textContent.includes("LIST"), "botão de modo em inglês (LIST)");
+  window.i18n.setLang("pt"); T.applyLang(); await wait(10);
+  ok($("#tabAll").textContent === "TODOS", "trocar p/ PT traduz rótulos estáticos");
+  ok(window.document.documentElement.lang === "pt-BR", "html lang vira pt-BR");
+  window.i18n.setLang("en"); T.applyLang(); await wait(10);
+  ok($("#tabAll").textContent === "ALL", "voltar p/ EN");
 
   console.log(`\nRESULTADO: ${pass} passaram, ${fail} falharam`);
   if (fail > 0) process.exit(1);

@@ -1,6 +1,6 @@
 {
   "name": "esde-gamelist-editor",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "private": true,
   "description": "Testes de interface (jsdom) do ES-DE Gamelist Editor",
   "scripts": {

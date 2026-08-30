@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,25 +15,29 @@
 <div class="app" id="app" data-panel="open">
   <!-- HEADER -->
   <header class="header">
-    <button class="icon-btn" id="panelToggle" title="Recolher/expandir consoles (Ctrl+B)">☰</button>
+    <button class="icon-btn" id="panelToggle" data-i18n-title="hdr.panelToggle" title="Collapse/expand consoles (Ctrl+B)">☰</button>
     <span class="logo">GAMELIST<b>_</b>EDITOR</span>
     <div class="viewseg">
-      <button id="viewList" class="on" title="Modo lista (G)">☰ LISTA</button>
-      <button id="viewGrid" title="Modo grade (G)">▦ GRADE</button>
+      <button id="viewList" class="on" data-i18n="view.list" data-i18n-title="view.list.title" title="List mode (G)">☰ LIST</button>
+      <button id="viewGrid" data-i18n="view.grid" data-i18n-title="view.grid.title" title="Grid mode (G)">▦ GRID</button>
     </div>
     <div class="search">
       <span class="ic">⌕</span>
-      <input id="searchInput" type="text" placeholder="Filtrar  ( / )" autocomplete="off">
+      <input id="searchInput" type="text" data-i18n-ph="search.ph" placeholder="Filter  ( / )" autocomplete="off">
       <span class="count" id="searchCount"></span>
     </div>
     <span class="spacer"></span>
-    <button class="btn" id="openBtn" title="Abrir coleção">Abrir</button>
-    <button class="btn" id="importBtn" title="Importar marcações (.txt)">Importar</button>
-    <button class="btn" id="orphanBtn" title="Limpeza de órfãos">Limpeza</button>
-    <button class="btn" id="helpBtn" title="Atalhos ( ? )">?</button>
+    <button class="btn" id="openBtn" data-i18n="open.btn" data-i18n-title="open.btn.title" title="Open collection">Open</button>
+    <button class="btn" id="importBtn" data-i18n="import.btn" data-i18n-title="import.btn.title" title="Import marks (.txt)">Import</button>
+    <button class="btn" id="orphanBtn" data-i18n="orphan.btn" data-i18n-title="orphan.btn.title" title="Orphan cleanup">Cleanup</button>
+    <button class="btn" id="helpBtn" data-i18n-title="help.btn.title" title="Shortcuts ( ? )">?</button>
+    <div class="viewseg langseg" id="langSeg">
+      <button data-lang="en" data-i18n-title="lang.en.title" title="English">EN</button>
+      <button data-lang="pt" data-i18n-title="lang.pt.title" title="Português">PT</button>
+    </div>
   </header>
 
-  <!-- caixinhas (consoles em pílulas quando o painel está recolhido) -->
+  <!-- consoles as pills when the panel is collapsed -->
   <div class="pills" id="pillsBar"></div>
 
   <!-- BODY -->
@@ -43,29 +47,29 @@
       <div class="side-head">
         <span class="ttl" id="sideCount">CONSOLES·0</span>
         <div class="seg">
-          <button id="segPanel" class="on" title="Painel lateral">▤</button>
-          <button id="segPills" title="Caixinhas no topo">▭</button>
+          <button id="segPanel" class="on" data-i18n-title="seg.panel.title" title="Side panel">▤</button>
+          <button id="segPills" data-i18n-title="seg.pills.title" title="Pills on top">▭</button>
         </div>
       </div>
       <div class="side-list" id="sideList"></div>
       <div class="side-foot">
         <div class="path" id="sideFootPath">—</div>
-        <div id="sideFootStatus">lixeira ativa · backup ok</div>
+        <div id="sideFootStatus" data-i18n="foot.trashActive">trash active · backup ok</div>
       </div>
     </aside>
 
     <div class="main">
       <div class="toolbar">
-        <button class="tab-btn active" id="tabAll" data-mode="all">TODOS</button>
-        <button class="tab-btn" id="tabMarked" data-mode="marked">MARCADOS·<span id="tabMarkedCount">0</span></button>
-        <select class="sort" id="sortSelect" title="Ordenar">
-          <option value="name:asc">Nome A–Z</option>
-          <option value="name:desc">Nome Z–A</option>
-          <option value="date:asc">Data ↑</option>
-          <option value="date:desc">Data ↓</option>
-          <option value="path:asc">Arquivo A–Z</option>
+        <button class="tab-btn active" id="tabAll" data-mode="all" data-i18n="tab.all">ALL</button>
+        <button class="tab-btn" id="tabMarked" data-mode="marked"><span data-i18n="tab.marked">MARKED</span>·<span id="tabMarkedCount">0</span></button>
+        <select class="sort" id="sortSelect" data-i18n-title="sort.title" title="Sort">
+          <option value="name:asc" data-i18n="sort.nameAsc">Name A–Z</option>
+          <option value="name:desc" data-i18n="sort.nameDesc">Name Z–A</option>
+          <option value="date:asc" data-i18n="sort.dateAsc">Date ↑</option>
+          <option value="date:desc" data-i18n="sort.dateDesc">Date ↓</option>
+          <option value="path:asc" data-i18n="sort.pathAsc">File A–Z</option>
         </select>
-        <label class="tilesize" id="tileSizeWrap" hidden>tamanho <input type="range" id="tileSize" min="120" max="220" value="150"></label>
+        <label class="tilesize" id="tileSizeWrap" hidden><span data-i18n="tilesize.label">size</span> <input type="range" id="tileSize" min="120" max="220" value="150"></label>
         <span class="count" id="listCount"></span>
       </div>
       <div class="panes">
@@ -80,10 +84,10 @@
 
         <!-- DETAIL (inline in list mode; slide-over in grid mode) -->
         <section class="detail-pane" id="detailPane">
-          <button class="slide-close" id="slideClose" title="Fechar (Esc)">✕</button>
+          <button class="slide-close" id="slideClose" data-i18n-title="slide.close.title" title="Close (Esc)">✕</button>
           <div class="detail-empty" id="detailEmpty">
-            <p>Selecione um jogo na lista.</p>
-            <p class="muted">↑ ↓ ou J / K para navegar</p>
+            <p data-i18n="detail.selectGame">Select a game from the list.</p>
+            <p class="muted" data-i18n="detail.navHint">↑ ↓ or J / K to navigate</p>
           </div>
           <div class="detail-body" id="detailBody" hidden>
             <div class="carousel" id="carousel">
@@ -94,15 +98,15 @@
             <code class="detail-path" id="detailPath"></code>
             <div class="detail-meta" id="detailMeta"></div>
             <div class="mark-row">
-              <button class="markbtn r1" data-level="1" title="Del / 1">1·ENTRADA</button>
-              <button class="markbtn r2" data-level="2" title="Shift+Del / 2">2·+ROM</button>
-              <button class="markbtn r3" data-level="3" title="Alt+Del / 3">3·+MÍDIA</button>
-              <button class="markbtn clear" data-level="0" title="U">LIMPAR·U</button>
+              <button class="markbtn r1" data-level="1" data-i18n="mark.r1" data-i18n-title="mark.r1.title" title="Del / 1">1·ENTRY</button>
+              <button class="markbtn r2" data-level="2" data-i18n="mark.r2" data-i18n-title="mark.r2.title" title="Shift+Del / 2">2·+ROM</button>
+              <button class="markbtn r3" data-level="3" data-i18n="mark.r3" data-i18n-title="mark.r3.title" title="Alt+Del / 3">3·+MEDIA</button>
+              <button class="markbtn clear" data-level="0" data-i18n="mark.clear" data-i18n-title="mark.clear.title" title="U">CLEAR·U</button>
             </div>
             <div class="fields" id="fieldsWrap"></div>
             <div class="field-add">
-              <input id="newFieldName" placeholder="novo campo (ex.: region)">
-              <button class="btn small" id="addFieldBtn">+ Campo</button>
+              <input id="newFieldName" data-i18n-ph="field.new.ph" placeholder="new field (e.g. region)">
+              <button class="btn small" id="addFieldBtn" data-i18n="field.add">+ Field</button>
             </div>
           </div>
         </section>
@@ -110,16 +114,16 @@
 
       <!-- BOTTOM PLAN BAR -->
       <div class="planbar">
-        <button class="plan-open" id="planOpenBtn">PLANO ▲ <span id="planTotal">0</span></button>
+        <button class="plan-open" id="planOpenBtn"><span data-i18n="plan.label">PLAN ▲</span> <span id="planTotal">0</span></button>
         <span class="plan-sum">
-          <b class="n-edit" id="pCntEdit">0</b> edições ·
-          <b class="n1" id="pCntR1">0</b> entradas ·
-          <b class="n2" id="pCntR2">0</b> ROMs ·
-          <b class="n3" id="pCntR3">0</b> mídias — tudo → lixeira, com backup
+          <b class="n-edit" id="pCntEdit">0</b> <span data-i18n="plan.edits">edits</span> ·
+          <b class="n1" id="pCntR1">0</b> <span data-i18n="plan.entries">entries</span> ·
+          <b class="n2" id="pCntR2">0</b> <span data-i18n="plan.roms">ROMs</span> ·
+          <b class="n3" id="pCntR3">0</b> <span data-i18n="plan.media">media</span> <span data-i18n="plan.tail">— all → trash, with backup</span>
         </span>
         <span class="spacer"></span>
-        <button class="btn" id="reviewBtn">Revisar plano</button>
-        <button class="btn primary" id="commitBtn" title="Ctrl+S">APLICAR (CTRL+S)</button>
+        <button class="btn" id="reviewBtn" data-i18n="review.btn">Review plan</button>
+        <button class="btn primary" id="commitBtn" data-i18n="commit.btn" data-i18n-title="commit.btn.title" title="Ctrl+S">APPLY (CTRL+S)</button>
       </div>
     </div>
   </div>
@@ -128,64 +132,64 @@
 <!-- ============================== OPEN MODAL ============================== -->
 <div class="backdrop" id="openModal" hidden>
   <div class="modal">
-    <div class="modal-head"><h3>ABRIR COLEÇÃO</h3></div>
+    <div class="modal-head"><h3 data-i18n="open.title">OPEN COLLECTION</h3></div>
     <div class="modal-body">
       <div class="seg-toggle">
-        <button class="tab on" data-tab="root">Pasta de sistemas (ES-DE)</button>
-        <button class="tab" data-tab="file">Arquivo único</button>
+        <button class="tab on" data-tab="root" data-i18n="open.tab.root">Systems folder (ES-DE)</button>
+        <button class="tab" data-tab="file" data-i18n="open.tab.file">Single file</button>
       </div>
 
       <div class="tabpanel" data-panel="root">
-        <label>Pasta de gamelists <small>(contém <code>&lt;sistema&gt;/gamelist.xml</code>)</small></label>
+        <label data-i18n-html="open.lbl.root">Gamelists folder <small>(contains <code>&lt;system&gt;/gamelist.xml</code>)</small></label>
         <div class="path-row">
-          <input id="in_gamelists_root" placeholder="ex.: .../ES-DE/gamelists">
-          <button type="button" class="btn small pick" data-pick="folder" data-target="in_gamelists_root">Procurar…</button>
+          <input id="in_gamelists_root" data-i18n-ph="open.ph.root" placeholder="e.g. .../ES-DE/gamelists">
+          <button type="button" class="btn small pick" data-pick="folder" data-target="in_gamelists_root" data-i18n="pick.browse">Browse…</button>
         </div>
       </div>
       <div class="tabpanel" data-panel="file" hidden>
-        <label>Arquivo gamelist.xml</label>
+        <label data-i18n="open.lbl.file">gamelist.xml file</label>
         <div class="path-row">
-          <input id="in_gamelist_file" placeholder="ex.: .../gamelists/snes/gamelist.xml">
-          <button type="button" class="btn small pick" data-pick="file" data-target="in_gamelist_file">Procurar…</button>
+          <input id="in_gamelist_file" data-i18n-ph="open.ph.file" placeholder="e.g. .../gamelists/snes/gamelist.xml">
+          <button type="button" class="btn small pick" data-pick="file" data-target="in_gamelist_file" data-i18n="pick.browse">Browse…</button>
         </div>
-        <label>Nome do sistema <small>(opcional — inferido da pasta)</small></label>
+        <label data-i18n-html="open.lbl.system">System name <small>(optional — inferred from the folder)</small></label>
         <input id="in_system" placeholder="snes">
       </div>
 
-      <label>Pasta de ROMs <small>(necessária p/ remoção nível 2)</small></label>
+      <label data-i18n-html="open.lbl.roms">ROMs folder <small>(needed for level-2 removal)</small></label>
       <div class="path-row">
-        <input id="in_roms_root" placeholder="ex.: .../ROMs">
-        <button type="button" class="btn small pick" data-pick="folder" data-target="in_roms_root">Procurar…</button>
+        <input id="in_roms_root" data-i18n-ph="open.ph.roms" placeholder="e.g. .../ROMs">
+        <button type="button" class="btn small pick" data-pick="folder" data-target="in_roms_root" data-i18n="pick.browse">Browse…</button>
       </div>
-      <label>Pasta downloaded_media <small>(nível 3 + prévia de capas)</small></label>
+      <label data-i18n-html="open.lbl.media">downloaded_media folder <small>(level 3 + cover preview)</small></label>
       <div class="path-row">
-        <input id="in_media_root" placeholder="ex.: .../ES-DE/downloaded_media">
-        <button type="button" class="btn small pick" data-pick="folder" data-target="in_media_root">Procurar…</button>
+        <input id="in_media_root" data-i18n-ph="open.ph.media" placeholder="e.g. .../ES-DE/downloaded_media">
+        <button type="button" class="btn small pick" data-pick="folder" data-target="in_media_root" data-i18n="pick.browse">Browse…</button>
       </div>
 
       <details class="adv">
-        <summary>AVANÇADO — BACKUP, LIXEIRA, HARD DELETE</summary>
-        <label>Pasta de backup <small>(cópia da gamelist antes de cada commit)</small></label>
+        <summary data-i18n="open.adv">ADVANCED — BACKUP, TRASH, HARD DELETE</summary>
+        <label data-i18n-html="open.lbl.backup">Backup folder <small>(copy of the gamelist before each commit)</small></label>
         <div class="path-row">
-          <input id="in_backup_root" placeholder="ex.: .../ES-DE/backup">
-          <button type="button" class="btn small pick" data-pick="folder" data-target="in_backup_root">Procurar…</button>
+          <input id="in_backup_root" data-i18n-ph="open.ph.backup" placeholder="e.g. .../ES-DE/backup">
+          <button type="button" class="btn small pick" data-pick="folder" data-target="in_backup_root" data-i18n="pick.browse">Browse…</button>
         </div>
-        <label>Lixeira <small>(padrão: <code>_GAMELIST_EDITOR_TRASH</code>)</small></label>
+        <label data-i18n-html="open.lbl.trash">Trash <small>(default: <code>_GAMELIST_EDITOR_TRASH</code>)</small></label>
         <div class="path-row">
-          <input id="in_trash_root" placeholder="usar padrão">
-          <button type="button" class="btn small pick" data-pick="folder" data-target="in_trash_root">Procurar…</button>
+          <input id="in_trash_root" data-i18n-ph="open.ph.trash" placeholder="use default">
+          <button type="button" class="btn small pick" data-pick="folder" data-target="in_trash_root" data-i18n="pick.browse">Browse…</button>
         </div>
         <label class="checkbox-row">
           <input type="checkbox" id="in_hard_delete">
-          <span>Apagar de vez (hard delete) — <span class="warn">sem lixeira</span></span>
+          <span data-i18n-html="open.hardDelete">Delete permanently (hard delete) — <span class="warn">no trash</span></span>
         </label>
       </details>
 
       <div id="openError" class="error-box" hidden></div>
     </div>
     <div class="modal-foot">
-      <button class="btn" id="openCancel">Cancelar</button>
-      <button class="btn primary" id="openConfirm">ABRIR</button>
+      <button class="btn" id="openCancel" data-i18n="open.cancel">Cancel</button>
+      <button class="btn primary" id="openConfirm" data-i18n="open.confirm">OPEN</button>
     </div>
   </div>
 </div>
@@ -193,15 +197,15 @@
 <!-- ============================== COMMIT / PLAN MODAL ============================== -->
 <div class="backdrop" id="commitModal" hidden>
   <div class="modal wide">
-    <div class="modal-head"><h3>REVISÃO DO PLANO</h3><span class="modal-mode" id="commitMode"></span></div>
+    <div class="modal-head"><h3 data-i18n="commit.title">PLAN REVIEW</h3><span class="modal-mode" id="commitMode"></span></div>
     <div class="modal-body">
       <div class="plan-stats" id="planSummary"></div>
       <div class="plan-list" id="planList"></div>
       <div id="commitResult" class="result-box" hidden></div>
     </div>
     <div class="modal-foot">
-      <button class="btn" id="commitCancel">Voltar</button>
-      <button class="btn danger" id="commitExecute">APLICAR PLANO</button>
+      <button class="btn" id="commitCancel" data-i18n="commit.back">Back</button>
+      <button class="btn danger" id="commitExecute" data-i18n="commit.apply">APPLY PLAN</button>
     </div>
   </div>
 </div>
@@ -209,43 +213,43 @@
 <!-- ============================== ORPHAN MODAL ============================== -->
 <div class="backdrop" id="orphanModal" hidden>
   <div class="modal wide">
-    <div class="modal-head"><h3>LIMPEZA DE ÓRFÃOS</h3><span class="modal-mode" id="orphanMode">→ lixeira</span></div>
+    <div class="modal-head"><h3 data-i18n="orphan.title">ORPHAN CLEANUP</h3><span class="modal-mode" id="orphanMode">→ trash</span></div>
     <div class="modal-body">
       <div class="orphan-controls">
-        <label>Escopo</label>
+        <label data-i18n="orphan.scope">Scope</label>
         <select id="orphanScope">
-          <option value="current">Console atual</option>
-          <option value="all">Todos os consoles</option>
+          <option value="current" data-i18n="orphan.scope.current">Current console</option>
+          <option value="all" data-i18n="orphan.scope.all">All consoles</option>
         </select>
-        <button class="btn amber" id="orphanScanBtn">ESCANEAR</button>
-        <span class="orphan-hint">Entradas sem ROM e mídia sem jogo (considera .m3u).</span>
+        <button class="btn amber" id="orphanScanBtn" data-i18n="orphan.scan">SCAN</button>
+        <span class="orphan-hint" data-i18n="orphan.hint">Entries with no ROM and media with no game (.m3u-aware).</span>
       </div>
       <div id="orphanResults" hidden>
         <div class="plan-stats" id="orphanSummary"></div>
         <div class="orphan-sec">
           <div class="orphan-sec-head">
-            <label class="checkbox-row"><input type="checkbox" id="orphChkAllEntries" checked> <strong>Entradas órfãs</strong></label>
+            <label class="checkbox-row"><input type="checkbox" id="orphChkAllEntries" checked> <strong data-i18n="orphan.sec.entries">Orphan entries</strong></label>
             <span class="list-meta" id="orphMetaEntries"></span>
           </div>
           <div class="orphan-list" id="orphListEntries"></div>
         </div>
         <div class="orphan-sec">
           <div class="orphan-sec-head">
-            <label class="checkbox-row"><input type="checkbox" id="orphChkAllMedia" checked> <strong>Mídias órfãs</strong></label>
+            <label class="checkbox-row"><input type="checkbox" id="orphChkAllMedia" checked> <strong data-i18n="orphan.sec.media">Orphan media</strong></label>
             <span class="list-meta" id="orphMetaMedia"></span>
           </div>
           <div class="orphan-list" id="orphListMedia"></div>
         </div>
         <div class="orphan-sec" id="orphSecM3u" hidden>
-          <div class="orphan-sec-head"><strong>⚠ M3U com discos ausentes</strong><span class="list-meta">informativo</span></div>
+          <div class="orphan-sec-head"><strong data-i18n="orphan.sec.m3u">⚠ M3U with missing discs</strong><span class="list-meta" data-i18n="orphan.sec.m3u.meta">informational</span></div>
           <div class="orphan-list" id="orphListM3u"></div>
         </div>
         <div id="orphanResult" class="result-box" hidden></div>
       </div>
     </div>
     <div class="modal-foot">
-      <button class="btn" id="orphanClose">Fechar</button>
-      <button class="btn danger" id="orphanCleanBtn" disabled>LIMPAR SELECIONADOS</button>
+      <button class="btn" id="orphanClose" data-i18n="orphan.close">Close</button>
+      <button class="btn danger" id="orphanCleanBtn" data-i18n="orphan.clean" disabled>CLEAN SELECTED</button>
     </div>
   </div>
 </div>
@@ -253,25 +257,25 @@
 <!-- ============================== IMPORT MODAL ============================== -->
 <div class="backdrop" id="importModal" hidden>
   <div class="modal">
-    <div class="modal-head"><h3>IMPORTAR MARCAÇÕES</h3></div>
+    <div class="modal-head"><h3 data-i18n="import.title">IMPORT MARKS</h3></div>
     <div class="modal-body">
       <div class="dropzone" id="importDrop">
-        Arraste o <b>.txt</b> aqui ou clique para procurar…
-        <div class="fmt">console|caminho|nível(1-3)  ·  ou  console|caminho|campo|valor</div>
+        <span data-i18n-html="import.drop">Drop the <b>.txt</b> here or click to browse…</span>
+        <div class="fmt" data-i18n="import.fmt">console|path|level(1-3)  ·  or  console|path|field|value</div>
       </div>
       <div id="importPreview" hidden>
         <div class="import-head">
           <span id="importFileName" class="mono"></span>
           <span class="ok" id="importOk">0 OK</span>
-          <span class="bad" id="importBad" hidden>0 NÃO ENCONTRADOS</span>
+          <span class="bad" id="importBad" hidden>0 NOT FOUND</span>
         </div>
         <div class="import-list" id="importList"></div>
       </div>
       <div id="importError" class="error-box" hidden></div>
     </div>
     <div class="modal-foot">
-      <button class="btn" id="importCancel">Cancelar</button>
-      <button class="btn primary" id="importApply" disabled>APLICAR</button>
+      <button class="btn" id="importCancel" data-i18n="import.cancel">Cancel</button>
+      <button class="btn primary" id="importApply" data-i18n="import.apply" disabled>APPLY</button>
     </div>
   </div>
 </div>
@@ -279,30 +283,31 @@
 <!-- ============================== HELP MODAL ============================== -->
 <div class="backdrop" id="helpModal" hidden>
   <div class="modal">
-    <div class="modal-head"><h3>ATALHOS</h3></div>
+    <div class="modal-head"><h3 data-i18n="help.title">SHORTCUTS</h3></div>
     <div class="modal-body"><div class="kbd-grid" id="kbdGrid"></div></div>
-    <div class="modal-foot"><button class="btn primary" id="helpClose">Fechar</button></div>
+    <div class="modal-foot"><button class="btn primary" id="helpClose" data-i18n="help.close">Close</button></div>
   </div>
 </div>
 
 <!-- ============================== CONFIRM MODAL ============================== -->
 <div class="backdrop" id="confirmModal" hidden>
   <div class="modal">
-    <div class="modal-head"><h3 id="confirmTitle">Confirmar</h3></div>
+    <div class="modal-head"><h3 id="confirmTitle" data-i18n="confirm.title">Confirm</h3></div>
     <div class="modal-body"><p id="confirmMsg"></p></div>
     <div class="modal-foot">
-      <button class="btn" id="confirmNo">Cancelar</button>
-      <button class="btn primary" id="confirmYes">Continuar</button>
+      <button class="btn" id="confirmNo" data-i18n="confirm.no">Cancel</button>
+      <button class="btn primary" id="confirmYes" data-i18n="confirm.yes">Continue</button>
     </div>
   </div>
 </div>
 
 <div id="topProgress" class="top-progress" hidden><div class="bar"></div></div>
 <div id="loadOverlay" class="load-overlay" hidden>
-  <div class="load-card"><div class="load-spinner"></div><div id="loadText" class="load-text">Carregando…</div></div>
+  <div class="load-card"><div class="load-spinner"></div><div id="loadText" class="load-text" data-i18n="loading">Loading…</div></div>
 </div>
 <div id="toast" class="toast" hidden></div>
 
+<script src="js/i18n.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>

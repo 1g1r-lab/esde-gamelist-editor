@@ -52,7 +52,7 @@ exe = EXE(
     a.binaries,
     a.zipfiles,
     a.datas,
-    name="esde-gamelist-editor-v1.3.2",
+    name="esde-gamelist-editor-v1.3.3",
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
