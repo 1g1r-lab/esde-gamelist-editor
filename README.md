@@ -21,6 +21,18 @@ executable**.
 
 ---
 
+## Screenshots
+
+| List view — inline editor & live change plan | Grid view — 3:4 box-art covers |
+|:--:|:--:|
+| [![List view](docs/img/editor-list.png)](docs/img/editor-list.png) | [![Grid view](docs/img/editor-grid.png)](docs/img/editor-grid.png) |
+| **Marking for removal** (`1` / `2` / `3`) with the plan bar | **Slide-over detail** panel in grid mode |
+| [![Marking games for removal](docs/img/editor-marking.png)](docs/img/editor-marking.png) | [![Grid slide-over detail](docs/img/editor-grid-detail.png)](docs/img/editor-grid-detail.png) |
+
+<sub>UI shown in Portuguese (pt-BR) — the app's current language — with placeholder sample data.</sub>
+
+---
+
 ## Download
 
 Grab a prebuilt binary from the [**latest release**](https://github.com/1g1r-lab/esde-gamelist-editor/releases/latest):
